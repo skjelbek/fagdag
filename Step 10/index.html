@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>VALG 2013</title>
+    <link href="content/styling/site.css" rel="stylesheet" />
+    <script src="//use.edgefonts.net/abril-fatface;bebas-neue.js"></script>
+</head>
+    <body>
+        <!-- Libs -->
+        <script src="app/libs/jquery-1.9.1.js"></script>
+        <script src="app/libs/handlebars-1.0.0.js"></script>
+        <script src="app/libs/ember-1.0.0-rc.7.js"></script>
+        <script src="app/libs/ember-data-0.13.js"></script>
+        
+
+        <!-- App -->
+        <script src="app/app.js"></script>
+
+        <script src="app/models/Parti.js"></script>
+        <script src="app/models/Politiker.js"></script>
+        <script src="app/views/DoorbellButton.js"></script>
+        <script src="app/views/EditableImage.js"></script>
+
+        <script src="app/router.js"></script>
+        <script src="app/controllers/PartiController.js"></script>
+        <script src="app/controllers/PartierController.js"></script>
+
+        <!-- Templates -->
+        <script type="text/x-handlebars">
+            <header>
+            {{#linkTo "index" class="home-link"}}<h1>Valg 2013</h1>{{/linkTo}}
+            <nav>
+                <ul class="inline">
+                    <li>{{#linkTo "partier"}}Partier{{/linkTo}}</li>
+                    <li>{{#linkTo "politikere"}}Politikere{{/linkTo}}</li>
+                    <li>{{#linkTo "resultat"}}Resultat{{/linkTo}}</li>
+                </ul>
+            </nav>
+            </header>
+            <section class="content">
+                {{outlet}}
+            </section>
+        </script>
+        
+        <script type="text/x-handlebars" id="partier">
+            <section class="top-content">
+                <ul class="inline">
+                    {{#each parti in controller}}
+                        <li>
+                            {{#linkTo "parti" parti}}
+                                {{circle-component image=parti.logo label=parti.navn badge=parti.stemmer}}
+                            {{/linkTo}}
+                        </li>
+                    {{/each}}
+                </ul>
+            </section>
+            {{outlet}}
+        </script>
+        
+        <script type="text/x-handlebars" id="parti">
+            <section class="inner-content">
+                <h2>{{navn}}</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Stemmer</td>
+                            <td>{{stemmer}}</td>
+                        </tr>
+                        <tr>
+                            <td>Leder</td>
+                            <td>{{#linkTo "politiker" leder}}{{leder.navn}}{{/linkTo}}</td>
+                        </tr>
+                        <tr>
+                            <td>Logo</td>
+                            <td>{{view App.EditableImage valueBinding=logo}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                {{#view App.DoorbellButton action="stem" onStopped="save" delay="5"}}
+                                    <button class="big">
+                                        Stem
+                                    </button>
+                                {{/view}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </script>
+
+        <script type="text/x-handlebars" id="politikere">
+            <section class="top-content">
+                <ul class="inline">
+                    {{#each politiker in controller}}
+                    <li>{{#linkTo "politiker" politiker}}
+                            {{circle-component image=politiker.bilde label=politiker.navn}}
+                        {{/linkTo}}
+                    </li>
+                    {{/each}}
+                </ul>
+            </section>
+            {{outlet}}
+        </script>
+        
+        <script type="text/x-handlebars" id="politiker">
+            <section class="inner-content">
+                <h2>{{navn}}</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Alder</td>
+                            <td>{{alder}}</td>
+                        </tr>
+                        <tr>
+                            <td>Bilde</td>
+                            <td>{{view App.EditableImage valueBinding=bilde}}</td>
+                        </tr>
+                        <tr>
+                            <td>Parti</td>
+                            <td>{{#linkTo "parti" parti}}{{parti.navn}}{{/linkTo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </script>
+        
+        <script type="text/x-handlebars" id="resultat">
+            <section class="resultat">
+                <ul class="inline">
+                    {{#each controller itemController="parti"}}
+                        <li>
+                            <span class="histogram">
+                                <span class="bar" {{bindAttr style="histogramHeight"}}></span>
+                            </span>            
+                            {{#view App.DoorbellButton action="stem" onStopped="save" delay="5"}}
+                                {{circle-component image=logo label=navn badge=stemmer}}
+                            {{/view}}
+                        </li>
+                    {{/each}}
+                </ul>
+            </section>
+        </script>
+        
+        <script type="text/x-handlebars" id="components/circle-component">
+            <div class="circle-wrapper">
+                <div class="circle">
+                    <img {{bindAttr src="image"}} />
+                </div>
+                {{#if badge}}
+                <span class="badge">{{badge}}</span>
+                {{/if}}
+                <span class="circle-label">
+                    {{label}}
+                </span>
+            </div>
+        </script>
+        
+        <script type="text/x-handlebars" id="editable-image">
+            {{#unless view.isEditing}}
+                <img {{bindAttr src="view.value"}}/>
+            {{else}}
+                {{view Ember.TextField placeholder="Url til bilde" valueBinding="view.tempValue"}}
+                <button class="save" {{action saveImage target="view"}}>
+                    ✓
+                </button>
+                <button class="cancel" {{action cancel target="view"}}>
+                    ×
+                </button>
+            {{/unless}}
+        </script>
+ 
+    </body>
+</html>
