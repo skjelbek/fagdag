@@ -38,10 +38,10 @@
         
         <script type="text/x-handlebars" id="partier">
             <ul>
-                {{#each parti in controller}}
+                {{#each model}}
                     <li>
-                        {{#linkTo "parti" parti}}
-                            {{parti.navn}}
+                        {{#linkTo "parti" this}}
+                            {{navn}}
                         {{/linkTo}}
                     </li>
                 {{/each}}
@@ -73,10 +73,10 @@
         
         <script type="text/x-handlebars" id="politikere">
             <ul>
-                {{#each politiker in controller}}
+                {{#each model}}
                     <li>
-                        {{#linkTo "politiker" politiker}}
-                            {{politiker.navn}}
+                        {{#linkTo "politiker" this}}
+                            {{navn}}
                         {{/linkTo}}
                     </li>
                 {{/each}}

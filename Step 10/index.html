@@ -45,10 +45,10 @@
         <script type="text/x-handlebars" id="partier">
             <section class="top-content">
                 <ul class="inline">
-                    {{#each parti in controller}}
+                    {{#each model}}
                         <li>
-                            {{#linkTo "parti" parti}}
-                                {{circle-component image=parti.logo label=parti.navn badge=parti.stemmer}}
+                            {{#linkTo "parti" this}}
+                                {{circle-component image=logo label=navn badge=stemmer}}
                             {{/linkTo}}
                         </li>
                     {{/each}}
@@ -91,9 +91,9 @@
         <script type="text/x-handlebars" id="politikere">
             <section class="top-content">
                 <ul class="inline">
-                    {{#each politiker in controller}}
-                    <li>{{#linkTo "politiker" politiker}}
-                            {{circle-component image=politiker.bilde label=politiker.navn}}
+                    {{#each model}}
+                    <li>{{#linkTo "politiker" this}}
+                            {{circle-component image=bilde label=navn}}
                         {{/linkTo}}
                     </li>
                     {{/each}}
@@ -127,7 +127,7 @@
         <script type="text/x-handlebars" id="resultat">
             <section class="resultat">
                 <ul class="inline">
-                    {{#each controller itemController="parti"}}
+                    {{#each model itemController="parti"}}
                         <li>
                             <span class="histogram">
                                 <span class="bar" {{bindAttr style="histogramHeight"}}></span>
@@ -159,7 +159,7 @@
             {{#unless view.isEditing}}
                 <img {{bindAttr src="view.value"}}/>
             {{else}}
-                {{view Ember.TextField placeholder="Url til bilde" valueBinding="view.tempValue"}}
+                {{input placeholder="Url til bilde" valueBinding="view.tempValue"}}
                 <button class="save" {{action saveImage target="view"}}>
                     ✓
                 </button>
